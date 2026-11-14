@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Spoke & Co. – Bike gear for daily riders</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #eef1f4;
+        --surface: #fff;
+        --ink: #14213d;
+        --muted: #5a667d;
+        --line: #d5dbe4;
+        --accent: #2d5bff;
+        --accent-ink: #fff;
+        --pop: #ffd60a;
+        --head: "Bricolage Grotesque", "Arial Narrow", Arial, sans-serif;
+        --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0e1626;
+          --surface: #17233b;
+          --ink: #eaf0fb;
+          --muted: #9fadc6;
+          --line: #2a3857;
+          --accent: #6f8cff;
+          --accent-ink: #0e1626;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0e1626;
+        --surface: #17233b;
+        --ink: #eaf0fb;
+        --muted: #9fadc6;
+        --line: #2a3857;
+        --accent: #6f8cff;
+        --accent-ink: #0e1626;
+        color-scheme: dark;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 1rem/1.55 var(--body);
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        background: var(--surface);
+        z-index: 30;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 20;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+      .logo {
+        font: 800 1.4rem var(--head);
+        letter-spacing: -0.02em;
+      }
+      .cart-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        background: transparent;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-weight: 600;
+      }
+      .count {
+        background: var(--pop);
+        color: #14213d;
+        border-radius: 999px;
+        min-width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        font-size: 0.85rem;
+        padding: 0 6px;
+      }
+      .hero {
+        padding: 56px 0 40px;
+      }
+      .hero h1 {
+        font: 800 clamp(2.4rem, 8vw, 5rem)/0.98 var(--head);
+        letter-spacing: -0.03em;
+        margin: 0 0 16px;
+        max-width: 12ch;
+      }
+      .hero p {
+        color: var(--muted);
+        max-width: 46ch;
+        margin: 0 0 24px;
+        font-size: 1.1rem;
+      }
+      .btn {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 22px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .btn:hover {
+        filter: brightness(1.1);
+      }
+      .search {
+        display: block;
+        width: 100%;
+        max-width: 420px;
+        margin: 0 0 16px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+      }
+      .search::placeholder {
+        color: var(--muted);
+      }
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 0 0 24px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 6px 16px;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      h2 {
+        font: 800 1.8rem var(--head);
+        margin: 0 0 16px;
+        letter-spacing: -0.02em;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 20px;
+        padding-bottom: 64px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .thumb {
+        aspect-ratio: 4/3;
+        display: grid;
+        place-items: center;
+        font-size: 4rem;
+      }
+      .info {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+      }
+      .info h3 {
+        margin: 0;
+        font: 600 1.1rem var(--head);
+      }
+      .info small {
+        color: var(--muted);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 12px;
+      }
+      .price {
+        font: 800 1.25rem var(--head);
+      }
+      .add {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-weight: 600;
+      }
+      .add:hover {
+        filter: brightness(1.1);
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 16, 30, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 40;
+      }
+      .overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      aside {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(420px, 100%);
+        background: var(--surface);
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.25s;
+        display: flex;
+        flex-direction: column;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      aside.open {
+        transform: none;
+      }
+      .ah {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .ah h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+      .x {
+        border: 0;
+        background: transparent;
+        font-size: 1.6rem;
+        line-height: 1;
+        padding: 4px 8px;
+      }
+      .items {
+        flex: 1;
+        overflow: auto;
+        padding: 8px 20px;
+      }
+      .empty {
+        color: var(--muted);
+        padding: 24px 0;
+        grid-column: 1/-1;
+      }
+      .line {
+        display: grid;
+        grid-template-columns: 56px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .line .t {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 1.8rem;
+      }
+      .qty {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .qty button {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: transparent;
+      }
+      .foot {
+        padding: 16px 20px;
+        border-top: 1px solid var(--line);
+      }
+      .total {
+        display: flex;
+        justify-content: space-between;
+        font: 800 1.2rem var(--head);
+        margin-bottom: 12px;
+      }
+      .foot .btn {
+        width: 100%;
+        text-align: center;
+      }
+      .foot .btn[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        transform: translate(-50%, 20px);
+        background: var(--ink);
+        color: var(--bg);
+        padding: 10px 18px;
+        border-radius: 10px;
+        opacity: 0;
+        transition: 0.25s;
+        z-index: 60;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        .thumb {
+          font-size: 3rem;
+        }
+        .info {
+          padding: 12px;
+        }
+        .add {
+          padding: 8px 10px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap bar">
+        <div class="logo">Spoke & Co.</div>
+        <button class="cart-btn" id="open" aria-label="Open cart">
+          Cart <span class="count" id="count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <h1>Gear for the ride you take every day.</h1>
+        <p>
+          Lights, locks and layers that handle rain, traffic and the commute
+          home. Free shipping over $75.
+        </p>
+        <a class="btn" href="#shop">Shop all gear</a>
+      </section>
+
+      <section id="shop">
+        <h2>Shop</h2>
+        <input
+          class="search"
+          id="search"
+          type="search"
+          placeholder="Search gear, e.g. light or jacket"
+          aria-label="Search products"
+          autocomplete="off"
+        />
+        <div
+          class="filters"
+          id="filters"
+          role="group"
+          aria-label="Filter by category"
+        ></div>
+        <div class="grid" id="grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        © 2026 Spoke & Co. This is a demo store; no orders are placed.
+      </div>
+    </footer>
+
+    <div class="overlay" id="overlay"></div>
+    <aside id="drawer" aria-label="Shopping cart" aria-hidden="true">
+      <div class="ah">
+        <h2>Your cart</h2>
+        <button class="x" id="close" aria-label="Close cart">×</button>
+      </div>
+      <div class="items" id="items"></div>
+      <div class="foot">
+        <div class="total"><span>Total</span><span id="total">$0.00</span></div>
+        <button class="btn" id="checkout">Check out</button>
+      </div>
+    </aside>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      const PRODUCTS = [
+        {
+          id: 1,
+          name: "Brass bell",
+          cat: "Accessories",
+          price: 14,
+          icon: "🔔",
+          bg: "#ffe9a8",
+        },
+        {
+          id: 2,
+          name: "Steel water bottle",
+          cat: "Accessories",
+          price: 22,
+          icon: "🧴",
+          bg: "#c9dcff",
+        },
+        {
+          id: 3,
+          name: "Commuter helmet",
+          cat: "Safety",
+          price: 68,
+          icon: "⛑️",
+          bg: "#ffd0c9",
+        },
+        {
+          id: 4,
+          name: "USB light set",
+          cat: "Safety",
+          price: 35,
+          icon: "🔦",
+          bg: "#d8f0c8",
+        },
+        {
+          id: 5,
+          name: "U-lock",
+          cat: "Safety",
+          price: 49,
+          icon: "🔒",
+          bg: "#e2d6ff",
+        },
+        {
+          id: 6,
+          name: "Mini floor pump",
+          cat: "Tools",
+          price: 29,
+          icon: "🛠️",
+          bg: "#c8ecee",
+        },
+        {
+          id: 7,
+          name: "Waterproof pannier",
+          cat: "Bags",
+          price: 84,
+          icon: "🎒",
+          bg: "#ffe0b8",
+        },
+        {
+          id: 8,
+          name: "Rain jacket",
+          cat: "Apparel",
+          price: 96,
+          icon: "🧥",
+          bg: "#d3e0f5",
+        },
+      ];
+      const $ = (id) => document.getElementById(id);
+      const money = (n) => "$" + n.toFixed(2);
+      let cart = {},
+        cat = "All",
+        q = "";
+      try {
+        cart = JSON.parse(localStorage.getItem("spoke-cart") || "{}") || {};
+      } catch (e) {
+        cart = {};
+      }
+      function save() {
+        try {
+          localStorage.setItem("spoke-cart", JSON.stringify(cart));
+        } catch (e) {}
+      }
+
+      function renderFilters() {
+        const cats = ["All", ...new Set(PRODUCTS.map((p) => p.cat))];
+        $("filters").innerHTML = cats
+          .map(
+            (c) =>
+              `<button class="chip" aria-pressed="${c === cat}" data-cat="${c}">${c}</button>`,
+          )
+          .join("");
+      }
+      function renderGrid() {
+        const list = PRODUCTS.filter(
+          (p) =>
+            (cat === "All" || p.cat === cat) &&
+            (p.name + " " + p.cat).toLowerCase().includes(q),
+        );
+        $("grid").innerHTML = !list.length
+          ? '<p class="empty">No products match your search. Try a different word or clear the category filter.</p>'
+          : list
+              .map(
+                (p) => `
+   <article class="card">
+     <div class="thumb" style="background:${p.bg}" aria-hidden="true">${p.icon}</div>
+     <div class="info"><h3>${p.name}</h3><small>${p.cat}</small>
+       <div class="row"><span class="price">${money(p.price)}</span>
+       <button class="add" data-add="${p.id}" aria-label="Add ${p.name} to cart">Add to cart</button></div>
+     </div></article>`,
+              )
+              .join("");
+      }
+      function renderCart() {
+        const ids = Object.keys(cart).filter(
+          (id) => cart[id] > 0 && PRODUCTS.some((p) => p.id == id),
+        );
+        let total = 0,
+          n = 0;
+        $("items").innerHTML = ids.length
+          ? ids
+              .map((id) => {
+                const p = PRODUCTS.find((p) => p.id == id),
+                  q = cart[id];
+                total += p.price * q;
+                n += q;
+                return `<div class="line"><div class="t" style="background:${p.bg}">${p.icon}</div>
+      <div><strong>${p.name}</strong><div class="qty">
+      <button data-dec="${id}" aria-label="Decrease quantity">−</button><span>${q}</span>
+      <button data-inc="${id}" aria-label="Increase quantity">+</button></div></div>
+      <div>${money(p.price * q)}</div></div>`;
+              })
+              .join("")
+          : '<p class="empty">Your cart is empty. Add something from the shop.</p>';
+        $("count").textContent = n;
+        $("total").textContent = money(total);
+        $("checkout").disabled = !n;
+        save();
+      }
+      function toast(msg) {
+        const t = $("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toast.t);
+        toast.t = setTimeout(() => t.classList.remove("show"), 1800);
+      }
+      function drawer(open) {
+        $("drawer").classList.toggle("open", open);
+        $("overlay").classList.toggle("open", open);
+        $("drawer").setAttribute("aria-hidden", !open);
+        if (open) $("close").focus();
+        else $("open").focus();
+      }
+      document.addEventListener("click", (e) => {
+        const t = e.target.closest("button");
+        if (!t) return;
+        if (t.dataset.cat) {
+          cat = t.dataset.cat;
+          renderFilters();
+          renderGrid();
+        }
+        if (t.dataset.add) {
+          const p = PRODUCTS.find((p) => p.id == t.dataset.add);
+          cart[p.id] = (cart[p.id] || 0) + 1;
+          renderCart();
+          toast(p.name + " added to cart");
+        }
+        if (t.dataset.inc) {
+          cart[t.dataset.inc]++;
+          renderCart();
+        }
+        if (t.dataset.dec) {
+          cart[t.dataset.dec]--;
+          if (cart[t.dataset.dec] < 1) delete cart[t.dataset.dec];
+          renderCart();
+        }
+      });
+      $("search").addEventListener("input", (e) => {
+        q = e.target.value.trim().toLowerCase();
+        renderGrid();
+      });
+      $("open").onclick = () => drawer(true);
+      $("close").onclick = () => drawer(false);
+      $("overlay").onclick = () => drawer(false);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") drawer(false);
+      });
+      $("checkout").onclick = () => {
+        cart = {};
+        renderCart();
+        drawer(false);
+        toast("Order placed. Thanks for shopping!");
+      };
+      renderFilters();
+      renderGrid();
+      renderCart();
+    </script>
+  </body>
+</html>
